@@ -1,0 +1,112 @@
+﻿@model LetsLearnTogether.Models.Content
+@{
+    ViewBag.Title = "ContentData";
+}
+
+<style>
+    .video-container {
+        position: relative;
+        padding-bottom: 56.25%;
+        height: 0;
+        overflow: hidden;
+    }
+
+        .video-container iframe,
+        .video-container object,
+        .video-container embed {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+</style>
+@*@if (Model.HTMLContent != null)
+    {
+        <div class="row">
+            <div id="TextContent" class="mt-3 col-md-9">
+                @Html.Raw(Model.HTMLContent)
+            </div>
+        </div>
+    }
+    @if (Model.VideoLink != null)
+    {
+        <div class="row">
+            <div class="mt-3 col-md-9">
+                <div id="VideoContent" class="video-container">
+                    <iframe class="embed-responsive-item" src="@Model.VideoLink" allowfullscreen="" frameborder="0"></iframe>
+                </div>
+            </div>
+            <div class="mt-3 col-md-3">
+                <textarea id="userInput" width="100%", height="100%"></textarea>
+                <button id="downloadButton">Download Text File</button>
+            </div>
+        </div>
+
+    }*@
+
+
+
+<div class="row">
+    <div class="col-md-9">
+        @if (Model != null)
+        {
+            <div id="TextContent" class="mt-1 col-md-8 h3">
+                @Html.Raw(Model.Title)
+            </div>
+            <div class="mt-3 col-md-12">
+                <div id="VideoContent" class="video-container">
+                    <iframe class="embed-responsive-item" src="@Model.VideoLink" allowfullscreen="" frameborder="0"></iframe>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="col-md-3">
+        <div class="mt-5 pt-3 text-center text-primary">
+            <h4><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="#0d6efd" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                </svg>  Notes</h4>
+        </div>
+        <div class="row textarea-container">
+            <textarea id="userInput" class="form-control font-monospace" placeholder="write your notes here..." style="resize:none; height:25rem"></textarea>
+            <button id="downloadButton" class="btn btn-primary mt-3">Download Notes</button>
+        </div>
+    </div>
+</div>
+<div>
+    @if (Model.HTMLContent != null)
+    {
+        <div class="row">
+            <div class="m-3">
+                @Html.Raw(Model.HTMLContent)
+            </div>
+        </div>
+    }
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#downloadButton').click(function() {
+            // Get user input from textarea
+            var userInput = $('#userInput').val();
+
+            // Create a Blob with the user input content
+            var blob = new Blob([userInput], { type: 'text/plain' });
+
+            // Create a temporary URL for the Blob
+            var url = window.URL.createObjectURL(blob);
+
+            // Create a temporary <a> element to trigger download
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'notes.txt';
+            document.body.appendChild(a);
+            a.click();
+
+            // Clean up
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        });
+    });
+</script>

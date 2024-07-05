@@ -1,0 +1,86 @@
+﻿
+@{
+    ViewBag.Title = "Register";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <h2 class="row justify-content-center mb-4">Let's Learn Together</h2>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Register</h3>
+                </div>
+                <div class="card-body" style="padding-left:5vh">
+                    <form id="registrationForm">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="name" placeholder="Enter your name">
+                            <label for="name">Name</label>
+                        </div>
+                        <br />
+                        <div class="form-floating">
+                            <input type="email" class="form-control" id="email" placeholder="Enter your email">
+                            <label for="email">Email</label>
+                        </div>
+                        <br />
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="phone" placeholder="Enter your phone number">
+                            <label for="phone">Phone Number</label>
+                        </div>
+                        <br />
+                        <div class="form-floating">
+                            <input type="password" class="form-control" id="password" placeholder="Enter your password">
+                            <label for="password">Password</label>
+                        </div>
+                        <br />
+                        <div class="form-floating">
+                            <input type="password" class="form-control" id="confirmPassword" placeholder="Enter Confirm password">
+                            <label for="confirmPassword">Confirm Password</label>
+                        </div>
+                        <br />
+                        <div class=" col-md-12 text-center">
+                            <button type="submit" class="btn btn-primary btn-block">Register</button>
+                        </div>
+                        <br />
+                    </form>
+                </div>
+                <div class="card-footer text-muted">
+                    Already have an account? <a href="~/Account/Login">Login here</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+      $('#registrationForm').submit(function(event) {
+        event.preventDefault(); // Prevent form submission
+        var formData = {
+          name: $('#name').val(),
+          email: $('#email').val(),
+          phone: $('#phone').val(),
+          password: $('#password').val(),
+          confirmPassword: $('#confirmPassword').val()
+        };
+        // AJAX request to validate registration data
+        $.ajax({
+          type: 'POST',
+          url: 'Register',
+          data: formData,
+          success: function(response) {
+            if (response.success) {
+                window.location.href = response.redirectUrl; // Redirect to home page
+            } else{
+                alert(response.msg); // Show error message
+            }
+          },
+          error: function() {
+            alert('Error processing your request. Please try again later.'); // Show error message
+          }
+        });
+      });
+    });
+</script>

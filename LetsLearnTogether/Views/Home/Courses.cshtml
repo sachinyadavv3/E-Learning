@@ -1,0 +1,53 @@
+﻿@model IEnumerable<LetsLearnTogether.Models.Category>
+@{
+    ViewBag.Title = "Courses";
+}
+
+<div class="row mt-5">
+    <div class="col-md-10">
+        <h2>Choose your Courses</h2>
+    </div>
+</div>
+<form action="AddRemoveCategory" method="post">
+    <div class="row mt-3">
+        <div class="col-md-10">
+            <table class="table table-bordered">
+                @if (Model.Count() > 0)
+                {
+                    <thead class="h3 text-center">
+                        <tr>
+                            <td></td>
+                            <td>course</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var category in Model)
+                        {
+                            <tr>
+                                <td class="text-center text-black-50">
+                                    @if (category.ThumbnailImagePath == "false")
+                                    {
+                                        <input type="checkbox" class="form-check-input" id="CategoriesSelected" name="CategoriesSelected" value="@category.Id">
+                                    }
+                                    else
+                                    {
+                                        <input type="checkbox" class="form-check-input" id="CategoriesSelected" name="CategoriesSelected" value="@category.Id" checked>
+                                    }
+                                    
+                                </td>
+                                <td class="strong">
+                                    @category.Title
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                }
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2 d-grid">
+            <button class="btn btn-outline-primary ml-auto" >Save</button>
+        </div>
+    </div>
+</form>

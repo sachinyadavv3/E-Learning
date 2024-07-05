@@ -1,0 +1,151 @@
+﻿@model IEnumerable<LetsLearnTogether.Models.Category>
+@{
+    Layout = "~/Views/Shared/_CustomLayoutPage.cshtml";
+    ViewBag.Title = "Index";
+}
+
+
+
+<div class="container">
+
+    <div class="row p-2 mt-5 mb-4" style="display:flex">
+        <div class="col-10 text-capitalize">
+            <h2 class="m-auto">All Courses</h2>
+            <!-- Add new Course -->
+        </div>
+        @*<div class="col-2 pt-1">
+            <button type="button" class="col-2 pt-1 btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+                Add Course
+            </button>
+        </div>*@
+
+        <div class="col-2 pt-1 btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
+                <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"></path>
+                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"></path>
+            </svg>
+              Add Course
+        </div>
+    </div>
+
+    @if (Model.Count() > 0)
+    {
+        foreach (var category in Model)
+        {
+            <div class="border rounded row p-2">
+                <div class="col-10 text-capitalize" id="@category.Id" onclick="redirectContent(this)">
+                    <h3>@category.Title</h3>
+                </div>
+                <div class="col-2 pt-1 btn btn-outline-danger" id="@category.Id" onclick="onDelete(this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+                    </svg>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="text-bg-danger text-lg-center">
+            <h3>No Course has been created yet</h3>
+        </div>
+    }
+</div>
+
+<!-- Add New Course Modal -->
+<div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Course Detail</h1>
+                @*<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>*@
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="courseName" class="col-form-label">Course Title:</label>
+                        <input type="text" class="form-control" id="courseName">
+                    </div>
+                    <div class="mb-3">
+                        <label for="courseDescription" class="col-form-label">Course Description:</label>
+                        <textarea class="form-control" id="courseDescription"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button id="addCourse" type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+
+    function onDelete(info) {
+        var id = info.id;
+        $.ajax({
+            type: 'get',
+            url: '@Url.Action("DeleteCategory", "Admin")',
+            data: { id: id },
+            success: function (response) {
+                if (response.success) {
+
+                    window.location.reload(); // Redirect to home page after successful deletion
+                } else {
+                    alert("Please try again later"); // Show error message if deletion is not successful
+                }
+            },
+            error: function () {
+                alert('Error processing your request. Please try again later.'); // Show error message if AJAX call fails
+            }
+        });
+    }
+    @*function deleteCategory(id) {
+        //debugger;
+       // window.location.href = '@Url.Action("DeleteCategory", "Admin")?id=' + id;
+    }*@
+
+    function redirectContent(info) {
+        var id = info.id;
+        var catName = document.getElementById(id).querySelector('h3').textContent;
+        var encodedCatName = encodeURIComponent(catName);
+        window.location.href = '@Url.Action("Category", "Admin")?id=' + id + '&catName=' + encodedCatName;
+    }
+
+    $(document).ready(function () {
+
+        $("#addCourse").click(function () {
+            var data = {
+                name: $("#courseName").val().trim(),
+                description: $("#courseDescription").val().trim()
+            };
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("AddCategory", "Admin")",
+                data: data,
+                async:false,
+                success: function (response) {
+                    $("#courseName").val("");
+                    $("#courseDescription").val("");
+                    if (response.success) {
+                        $("#addCategoryModal").modal('hide');
+                        window.location.reload();
+                    } else {
+                        $("#addCategoryModal").modal('hide');
+                        alert("Please try again later");
+                    }
+                },
+                error: function () {
+                    alert('Error processing your request. Please try again later.');
+                }
+            })
+            e.preventDefault();
+        });
+
+
+    })
+
+</script>

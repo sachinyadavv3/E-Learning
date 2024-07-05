@@ -1,0 +1,112 @@
+﻿@model LetsLearnTogether.Models.ViewModel
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<main>
+    @*<section class="row" aria-labelledby="aspnetTitle">
+            <h1 id="title">ASP.NET</h1>
+            <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
+            <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
+        </section>
+
+        <div class="row">
+            <section class="col-md-4" aria-labelledby="gettingStartedTitle">
+                <h2 id="gettingStartedTitle">Getting started</h2>
+                <p>
+                    ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
+                    enables a clean separation of concerns and gives you full control over markup
+                    for enjoyable, agile development.
+                </p>
+                <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+            </section>
+            <section class="col-md-4" aria-labelledby="librariesTitle">
+                <h2 id="librariesTitle">Get more libraries</h2>
+                <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
+                <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+            </section>
+            <section class="col-md-4" aria-labelledby="hostingTitle">
+                <h2 id="hostingTitle">Web Hosting</h2>
+                <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
+                <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+            </section>
+        </div>*@
+    @*<div>
+            <table>
+                <tr>
+                    <td>Id</td>
+                    <td>Name</td>
+                    <td>Email</td>
+                    <td>Role</td>
+                </tr>
+                @foreach(var user in Model)
+                {
+                    <tr>
+                        <td>@user.Id</td>
+                        <td>@user.Name</td>
+                        <td>@user.Email</td>
+                        <td>@user.Role</td>
+                    </tr>
+                }
+            </table>
+        </div>*@
+
+
+</main>
+
+<div class="container mt-5">
+    <div class="accordion accordion-flush" id="accordionFlushExample">
+
+        @if (Model.Categories.Count() > 0)
+        {
+            <div class="accordion-item">
+                @foreach (var category in Model.Categories)
+                {
+                    <h4 class="accordion-header">
+                        <button class="accordion-button collapsed border rounded" type="button" data-bs-toggle="collapse" data-bs-target="#_@category.Id@category.Id" aria-expanded="false" aria-controls="#_@category.Id@category.Id"><h4 class=" text-capitalize">@category.Title</h4></button>
+                    </h4>
+                    <div id="_@category.Id@category.Id" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body">
+                            @foreach (var item in Model.Items.Where(a => category.Id == a.CategoryId).ToList())
+                            {
+                                <div class="row border pt-3 mb-2 rounded" onclick="reditectToContent(@item.Id, @item.CategoryId, '@item.Title')">
+                                    <div class="col-md-2 text-center">
+                                        <img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTUJo5klnPp8AxKbWWqKGjDbNkPuIzQk5MKgdK70AsuOZUncEZY" class="media-object" style="width:80px">
+                                    </div>
+                                    <div class="col-md-10">
+                                        <h4 class="media-heading text-capitalize">@item.Title</h4>
+                                        <p>@item.Description</p>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p>You have not enrolled in any courses</p>
+        }
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    function reditectToContent(id, catId, title) {
+        var url = '/Content/ContentData?contentId=' + encodeURIComponent(id) + '&categoryId=' + encodeURIComponent(catId) + '&contentTitle=' + encodeURIComponent(title);
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            success: function (response) {
+                window.location.href = url; // Redirect to the specified URL
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                alert('Error occurred while redirecting.');
+            }
+        });
+    }
+</script>

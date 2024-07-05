@@ -1,0 +1,92 @@
+﻿
+@{
+    ViewBag.Title = "Login";
+}
+
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <h2 class="row justify-content-center mb-4">Let's Learn Together</h2>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Login</h3>
+                </div>
+                <div class="card-body" style="padding-left:5vh">
+                    <form id="loginForm">
+                        <div class="form-floating">
+                            <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                            <label for="email">Email:</label>
+                        </div>
+                        <br />
+                        <div class="form-floating">
+                            <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                            <label for="password">Password:</label>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <label>Select Role:</label>
+                            <div class="form-check offset-1 col-lg-4">
+                                <input class="form-check-input role" type="radio" name="selectRole" value="user" checked>
+                                <label class="form-check-label" for="user">
+                                    User
+                                </label>
+                            </div>
+                            <div class="form-check col-lg-4">
+                                <input class="form-check-input role" type="radio" name="selectRole" value="admin">
+                                <label class="form-check-label" for="admin">
+                                    Admin
+                                </label>
+                            </div>
+                        </div>
+
+                        <br />
+                        <div class="col-md-12 text-center">
+                            <button type="submit" class="btn btn-primary btn-block">Login</button>
+
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-muted">
+                    Don't' have an account? <a href="~/Account/Register">Register here</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#loginForm').submit(function (event) {
+            event.preventDefault(); // Prevent form submission
+            var formData = {
+                email: $('#email').val(),
+                password: $('#password').val(),
+                role: $(".role:checked").val()
+            };
+            // AJAX request to validate registration data
+            $.ajax({
+                type: 'POST',
+                url: 'Login',
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        // Save user data in session storage
+                        localStorage.setItem('userData', JSON.stringify(response.data));
+                        var data = JSON.stringify(response.data);
+                        console.log(response.data)
+                        window.location.href = response.redirectUrl; // Redirect to home page
+                    } else {
+                        alert(response.msg); // Show error message
+                    }
+                },
+                error: function () {
+                    alert('Error processing your request. Please try again later.'); // Show error message
+                }
+            });
+        });
+    });
+</script>
+
